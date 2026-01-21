@@ -8,7 +8,7 @@ TOKEN = os.environ["BOT_TOKEN"]
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text
 
-    if "tiktok.com" not in text:
+    if not text or "tiktok.com" not in text:
         await update.message.reply_text("❌ Wyślij link do TikToka")
         return
 
@@ -23,10 +23,11 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_video(video=open("video.mp4", "rb"))
         os.remove("video.mp4")
 
-    except Exception:
+    except Exception as e:
         await update.message.reply_text("❌ Błąd pobierania")
 
 app = ApplicationBuilder().token(TOKEN).build()
 app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
 
+print("Bot uruchomiony")
 app.run_polling()
